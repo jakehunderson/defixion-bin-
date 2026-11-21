@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CREATE // DEFIXION</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; background: #000; font-family: 'Share Tech Mono', monospace; color: #fff; display: flex; align-items: center; justify-content: center; }
+  .auth-box { background: rgba(13,0,0,0.85); border: 2px solid #ff1a1a; padding: 40px; width: 100%; max-width: 600px; box-shadow: 0 0 30px rgba(255,26,26,0.2); }
+  h1 { color: #ff1a1a; text-transform: uppercase; text-align: center; margin-bottom: 30px; font-size: 28px; letter-spacing: 0.2em; }
+  input, textarea { width: 100%; background: #000; border: 1px solid #333; padding: 12px; color: #fff; font-family: inherit; font-size: 16px; margin-bottom: 15px; outline: none; }
+  textarea { height: 200px; resize: vertical; }
+  input:focus, textarea:focus { border-color: #ff1a1a; }
+  button { width: 100%; background: #ff1a1a; color: #000; border: none; padding: 14px; font-family: inherit; font-size: 16px; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
+  button:hover { background: #fff; box-shadow: 0 0 20px #fff; }
+</style>
+</head>
+<body>
+  <div class="auth-box">
+    <h1>New Paste</h1>
+    <input type="text" id="title" placeholder="PASTE TITLE">
+    <textarea id="content" placeholder="PASTE CONTENT..."></textarea>
+    <button onclick="create()">Publish</button>
+  </div>
+  <script>
+    async function create() {
+      const title = document.getElementById('title').value.trim();
+      const content = document.getElementById('content').value.trim();
+      if (!title || !content) return alert('Fill all fields');
+      
+      const res = await fetch('/api/paste', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ title, content })
+      });
+      
+      if (res.ok) {
+        const data = await res.json();
+        window.location.href = '/view/' + data.id;
+      } else if (res.status === 401) {
+        window.location.href = '/login';
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIEW // DEFIXION</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { min-height: 100%; background: #000; font-family: 'Share Tech Mono', monospace; color: #fff; }
+  .navbar { width: 100%; padding: 20px; background: #0d0000; border-bottom: 2px solid #ff1a1a; display: flex; justify-content: space-between; align-items: center; }
+  .navbar a { color: #ff1a1a; text-decoration: none; font-weight: bold; text-transform: uppercase; }
+  .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+  .paste-header { border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px; }
+  .paste-title { font-size: 32px; color: #ff1a1a; margin-bottom: 10px; }
+  .paste-meta { color: #666; font-size: 14px; }
+  .paste-content { background: #0d0000; border: 1px solid #331111; padding: 20px; white-space: pre-wrap; font-family: monospace; font-size: 16px; line-height: 1.6; color: #ccc; }
+</style>
+</head>
+<body>
+  <div class="navbar">
+    <a href="/">← Back to Home</a>
+  </div>
+  <div class="container">
+    <div class="paste-header">
+      <div class="paste-title" id="title">Loading...</div>
+      <div class="paste-meta" id="meta"></div>
+    </div>
+    <div class="paste-content" id="content"></div>
+  </div>
+  <script>
+    const id = window.location.pathname.split('/').pop();
+    fetch('/api/paste/' + id)
+      .then(r => r.json())
+      .then(data => {
+        if (data.error) { document.getElementById('title').textContent = 'Paste Not Found'; return; }
+        document.getElementById('title').textContent = data.title;
+        document.getElementById('meta').textContent = `BY ${data.author.toUpperCase()} • ${new Date(data.date).toLocaleString()}`;
+        document.getElementById('content').textContent = data.content;
+      });
+  </script>
+</body>
+</html>

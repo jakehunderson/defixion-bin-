@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LOGIN // DEFIXION</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; background: #000; font-family: 'Share Tech Mono', monospace; color: #fff; display: flex; align-items: center; justify-content: center; }
+  .auth-box { background: rgba(13,0,0,0.85); border: 2px solid #ff1a1a; padding: 40px; width: 100%; max-width: 400px; box-shadow: 0 0 30px rgba(255,26,26,0.2); }
+  h1 { color: #ff1a1a; text-transform: uppercase; text-align: center; margin-bottom: 30px; font-size: 28px; letter-spacing: 0.2em; }
+  input { width: 100%; background: #000; border: 1px solid #333; padding: 12px; color: #fff; font-family: inherit; font-size: 16px; margin-bottom: 15px; outline: none; }
+  input:focus { border-color: #ff1a1a; }
+  button { width: 100%; background: #ff1a1a; color: #000; border: none; padding: 14px; font-family: inherit; font-size: 16px; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
+  button:hover { background: #fff; box-shadow: 0 0 20px #fff; }
+  .error { color: #ff1a1a; font-size: 14px; text-align: center; margin-top: 10px; min-height: 18px; }
+  .bottom-link { text-align: center; margin-top: 20px; font-size: 14px; color: #666; }
+  .bottom-link a { color: #ff1a1a; text-decoration: none; }
+</style>
+</head>
+<body>
+  <div class="auth-box">
+    <h1>Login</h1>
+    <input type="text" id="user" placeholder="USERNAME">
+    <input type="password" id="pass" placeholder="PASSWORD">
+    <button onclick="login()">Enter</button>
+    <div class="error" id="err"></div>
+    <div class="bottom-link">Don't have an account? <a href="/signup">Sign Up</a></div>
+  </div>
+  <script>
+    async function login() {
+      const user = document.getElementById('user').value.trim();
+      const pass = document.getElementById('pass').value;
+      if (!user || !pass) return;
+      document.getElementById('err').textContent = 'LOGGING IN...';
+      const res = await fetch('/api/login', {
+        method: 'POST', headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ username: user, password: pass })
+      });
+      if (res.ok) window.location.href = '/';
+      else document.getElementById('err').textContent = 'INVALID CREDENTIALS';
+    }
+  </script>
+</body>
+</html>
